@@ -5,24 +5,20 @@ This is where all the magic happens - configuration for our entire backend.
 
 from pathlib import Path
 from datetime import timedelta
-from decouple import config  # Makes it easy to read from .env files
+from decouple import config
+import dj_database_url
+import os
 
 # Figure out where we are in the filesystem - this helps with relative paths
 # Basically, this points to the backend folder
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# This is super important - never commit this to git!
-# In production, you'll want to generate a new one and store it securely
-# Pro tip: run `python manage.py shell` then `from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())`
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
+# Production-ready settings with environment variable support
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or config('SECRET_KEY', default='django-insecure-change-this-in-production')
 
-# When this is True, Django shows detailed error pages (super helpful for debugging)
-# But you definitely don't want this in production - it exposes too much info
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-# These are the domains/hosts that Django will accept requests from
-# Add your production domain here when you deploy
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # All the apps that make up our project
 # Django apps are like plugins - each one adds functionality
@@ -54,14 +50,15 @@ INSTALLED_APPS = [
 # Middleware runs on every request - think of it as layers of processing
 # Order matters here! They execute top to bottom on request, then bottom to top on response
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',  # Adds security headers
-    'corsheaders.middleware.CorsMiddleware',  # Handles CORS - must be early in the stack
-    'django.contrib.sessions.middleware.SessionMiddleware',  # Manages user sessions
-    'django.middleware.common.CommonMiddleware',  # Common utilities (like trailing slash handling)
-    'django.middleware.csrf.CsrfViewMiddleware',  # Protects against CSRF attacks
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Attaches user to request
-    'django.contrib.messages.middleware.MessageMiddleware',  # Handles flash messages
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Prevents clickjacking
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
+    'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -85,13 +82,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database configuration
-# SQLite is great for development - it's just a file, no setup needed
-# For production, you'll want PostgreSQL or MySQL for better performance
+# Uses PostgreSQL in production (via DATABASE_URL), SQLite for local development
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Simple file-based database
-        'NAME': BASE_DIR / 'db.sqlite3',  # The actual database file lives here
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # These validators check passwords when users register
@@ -120,6 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
