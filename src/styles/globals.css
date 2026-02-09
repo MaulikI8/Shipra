@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 14 15 18;
+    --surface-1: 11 12 15;
+    --surface-2: 17 18 23;
+    --text: 255 255 255;
+    --muted: 172 180 190;
+    --accent: 227 30 36;
+    --ring: 227 30 36;
+    --border: 255 255 255 / 0.10;
+    --blur: 22px;
+    --radius: 16px;
+    --shadow-1: 0 10px 40px rgba(0,0,0,.45);
+    --shadow-2: 0 24px 84px rgba(0,0,0,.55);
+
+    /* spacing tokens */
+    --space-1: 8px;
+    --space-2: 12px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+    --space-7: 64px;
+    --space-8: 96px;
+  }
+
+  .light {
+    --bg: 246 248 252;
+    --surface-1: 252 253 255;
+    --surface-2: 236 240 248;
+    --text: 12 14 18;
+    --muted: 70 80 96;
+    --accent: 227 30 36;
+    --ring: 227 30 36;
+    --border: 0 0 0 / 0.10;
+  }
+
+  html {
+    font-family: "SF Pro", -apple-system, system-ui, Inter, "Segoe UI", Roboto, sans-serif;
+    background-color: rgb(var(--bg));
+  }
+
+  body {
+    @apply bg-bg text-text antialiased;
+    background-color: rgb(var(--bg));
+    margin: 0;
+    padding: 0;
+  }
+
+  :focus-visible {
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.28);
+    border-radius: var(--radius);
+    outline: none;
+  }
+
+  /* Force dark theme for dropdown options */
+  option {
+    background-color: #0f1115;
+    color: white;
+  }
+}
+

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Shipra - Advanced Logistics & Order Management</title>
+    <meta name="title" content="Shipra - Advanced Logistics & Order Management" />
+    <meta name="description" content="Shipra is your premier B2B logistics operating system. Streamline unexpected order spikes, manage complex inventory, and ship faster with Shipra." />
+    <meta name="keywords" content="shipra, logistics, shipping, warehouse management, OMS, supply chain, fulfillment" />
+    <meta name="author" content="Shipra" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://shipra.com/" />
+    <meta property="og:title" content="Shipra - Advanced Logistics & Order Management" />
+    <meta property="og:description" content="Shipra is your premier B2B logistics operating system. Streamline unexpected order spikes, manage complex inventory, and ship faster with Shipra." />
+    <meta property="og:image" content="/og-image.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://shipra.com/" />
+    <meta property="twitter:title" content="Shipra - Advanced Logistics & Order Management" />
+    <meta property="twitter:description" content="Shipra is your premier B2B logistics operating system. Streamline unexpected order spikes, manage complex inventory, and ship faster with Shipra." />
+    <meta property="twitter:image" content="/og-image.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0E0F12;
+        color: white;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      /* Loading screen */
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0E0F12;
+        z-index: 9999;
+      }
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(0, 232, 255, 0.1);
+        border-top-color: #00E8FF;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
