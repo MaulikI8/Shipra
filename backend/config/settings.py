@@ -171,7 +171,7 @@ SIMPLE_JWT = {
 # Without this, browsers would block the requests for security reasons
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://localhost:3000'  # Vite default port, and Create React App default
+    default='http://localhost:5173,http://localhost:3000,https://shipraa.vercel.app'
 ).split(',')
 
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies/auth headers to be sent
