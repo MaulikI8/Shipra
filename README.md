@@ -1,313 +1,177 @@
-# 🏭 Shipra - B2B Inventory Management System
+B2B WAREHOUSE MANAGEMENT PLATFORM
 
-A modern, full-stack B2B warehouse and inventory management platform built with React and Django. Features real-time stock tracking, order management, customer relationship tools, and advanced analytics.
+A modern, spatial, keyboard-first Order Management System (OMS) designed for B2B teams managing multi-warehouse operations.
 
-![Tech Stack](https://img.shields.io/badge/React-18-61DAFB?logo=react)
-![Django](https://img.shields.io/badge/Django-5.0-092E20?logo=django)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)
-![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)
+# GETTING STARTED
 
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Usage Guide](#-usage-guide)
-- [API Documentation](#-api-documentation)
-- [Screenshots](#-screenshots)
-
----
-
-## ✨ Features
-
-### Core Functionality
-- 📦 **Multi-Warehouse Management** - Track inventory across multiple locations
-- 🛒 **Order Processing** - Complete order lifecycle from creation to delivery
-- 📊 **Real-time Stock Tracking** - Automatic stock status updates (In Stock, Low Stock, Out of Stock)
-- 👥 **Customer Management** - CRM with credit limits and order history
-- 📈 **Advanced Analytics** - Revenue trends, product performance, warehouse efficiency
-- 🏷️ **Product Catalog** - SKU management with images, categories, and pricing
-- 🚚 **Shipment Tracking** - Editable tracking numbers for order fulfillment
-
-### User Experience
-- 🎨 **Glassmorphic UI** - Modern, premium design with smooth animations
-- 📱 **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- 🌙 **Dark Theme** - Eye-friendly dark mode interface
-- ⚡ **Real-time Updates** - Live data synchronization
-- 🔍 **Advanced Filtering** - Search and filter across all modules
-- 📤 **Export Reports** - CSV, Excel, and PDF export capabilities
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first styling
-- **Framer Motion** - Animations
-- **Recharts** - Data visualization
-- **Lucide React** - Icon library
-
-### Backend
-- **Django 5.0** - Web framework
-- **Django REST Framework** - API development
-- **SQLite** - Database (easily swappable to PostgreSQL/MySQL)
-- **Pillow** - Image processing
-- **JWT Authentication** - Secure token-based auth
-
----
-
-## 📁 Project Structure
-
-```
-B2B2/
-├── backend/                    # Django Backend
-│   ├── config/                # Project settings
-│   ├── orders/                # Order management app
-│   ├── inventory/             # Product & stock management
-│   ├── customers/             # Customer relationship management
-│   ├── warehouses/            # Warehouse locations
-│   ├── reports/               # Analytics & reporting
-│   ├── notifications/         # User notifications
-│   ├── manage.py              # Django management script
-│   └── requirements.txt       # Python dependencies
-│
-├── src/                       # React Frontend
-│   ├── app/                   # Page components
-│   │   ├── Dashboard.tsx      # Main dashboard
-│   │   ├── Orders.tsx         # Order list & management
-│   │   ├── OrderDetail.tsx    # Individual order view
-│   │   ├── Inventory.tsx      # Product catalog
-│   │   ├── Customers.tsx      # Customer management
-│   │   └── Reports.tsx        # Analytics & reports
-│   ├── components/            # Reusable UI components
-│   │   ├── SystemDock.tsx     # Bottom navigation
-│   │   ├── GlassCard.tsx      # Card component
-│   │   └── ...
-│   ├── lib/                   # Utilities
-│   │   ├── api.ts             # API client
-│   │   ├── export.ts          # Export utilities
-│   │   └── toast.ts           # Notifications
-│   └── main.tsx               # App entry point
-│
-├── public/                    # Static assets
-├── package.json               # Node dependencies
-├── vite.config.ts             # Vite configuration
-└── README.md                  # This file
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- **Node.js** 18+ and npm/pnpm
-- **Python** 3.11+
-- **Git**
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/MaulikI8/Shipra.git
-   cd Shipra
-   ```
-
-2. **Setup Backend (Django)**
-   ```bash
+1. Clone the repository
+2. Install frontend: pnpm install
+3. Setup backend:
    cd backend
-   
-   # Create virtual environment
    python -m venv venv
-   
-   # Activate virtual environment
-   # Windows:
-   venv\Scripts\activate
-   # macOS/Linux:
-   source venv/bin/activate
-   
-   # Install dependencies
+   source venv/bin/activate (or venv\Scripts\activate on Windows)
    pip install -r requirements.txt
-   
-   # Run migrations
    python manage.py migrate
-   
-   # Create superuser (admin account)
    python manage.py createsuperuser
+4. Run:
+   Frontend: pnpm run dev
+   Backend: python manage.py runserver
+
+# HOW TO USE THIS APP
+
+1. Dashboard Overview
+   When you log in, you are greeted by the Dashboard. This is your command center.
+   - The top cards show you critical metrics: Revenue, Active Orders, Inventory alerts.
+   - Use the sidebar (or top tabs) to navigate between sections: Orders, Inventory, Customers, Analytics.
+
+2. Managing Inventory
+   - Navigate to the Inventory tab.
+   - Click "Add Product" to create new items in your catalog.
+   - You can set the price, cost, and initial stock level.
+   - If stock runs low, the system will alert you.
+
+3. Managing Customers
+   - Go to the Customers tab.
+   - Add new business clients with their details and credit limits.
+   - You can view their order history and total spending.
+
+4. Creating Orders
+   - From any screen, you can press the "New Order" button.
+   - Select a Customer from the dropdown.
+   - Add Products to the order.
+   - The system automatically checks if there is enough stock in your warehouses.
+   - Once created, the order status starts as "Pending".
+
+5. Order Fulfillment
+   - As you process the physical goods, update the order status.
+   - Change status from Pending -> Processing -> Shipped -> Delivered.
+   - Updating status to Shipped/Delivered creates a permanent record of the sale for reports.
+
+# KEY CONCEPTS AND LOGIC
+
+Here is how the core business logic works in plain English and pseudocode.
+
+1. WAREHOUSE
+   A Warehouse is a physical location structure where products are stored.
+   logic:
+     A Warehouse has [Name, Location, Capacity]
+     An InventoryItem links a Product to a Warehouse with a specific Quantity.
+     
+     Total Stock for Product A = Sum of Product A quantity in Warehouse 1 + Warehouse 2 + ...
+
+2. CREDITS (CUSTOMER CREDIT LIMIT)
+   Credits refer to the "Credit Limit" assigned to a customer. This is the maximum monetary value of unpaid orders a customer is allowed to have.
    
-   # Start Django server
-   python manage.py runserver
-   ```
-   Backend will run at: `http://localhost:8000`
+   PSEUDOCODE CHECKING CREDIT LIMIT:
+     INPUT: Customer, NewOrderTotal
+     
+     CurrentDebt = Sum of all unpaid orders for Customer
+     AvailableCredit = Customer.CreditLimit - CurrentDebt
+     
+     IF NewOrderTotal > AvailableCredit THEN
+         REJECT Order ("Credit Limit Exceeded")
+     ELSE
+         APPROVE Order
+         Subtract stock from Inventory
+         Add Order to Customer History
+     END IF
 
-3. **Setup Frontend (React)**
-   ```bash
-   # From project root
-   npm install
-   # or
-   pnpm install
+3. SALES
+   A Sale is a confirmed Order. It represents a contract to deliver goods in exchange for money.
    
-   # Start development server
-   npm run dev
-   # or
-   pnpm run dev
-   ```
-   Frontend will run at: `http://localhost:5173`
+   PSEUDOCODE CREATING A SALE:
+     INPUT: Customer, ItemsList
+     
+     TotalAmount = 0
+     
+     FOR EACH Item IN ItemsList:
+         Product = FindProduct(Item.ID)
+         
+         IF Product.Stock < Item.Quantity THEN
+             ERROR "Insufficient Stock"
+             STOP PROCESS
+         END IF
+         
+         ItemTotal = Product.Price * Item.Quantity
+         TotalAmount = TotalAmount + ItemTotal
+     END FOR
+     
+     Create Order Record(Customer, TotalAmount, Status="Pending")
+     
+     FOR EACH Item IN ItemsList:
+         Inventory.Product.Stock = Inventory.Product.Stock - Item.Quantity
+         Save OrderItem Record
+     END FOR
+     
+     RETURN Success
 
-4. **Access the Application**
-   - Open browser to `http://localhost:5173`
-   - Login with your superuser credentials
-   - Start managing your inventory!
+4. PROFIT
+   Profit is the financial gain from sales, calculated as Revenue minus Cost of Goods Sold (COGS).
+   - Revenue: The price you sell the product for.
+   - Cost: The price you bought/manufactured the product for.
+   
+   PSEUDOCODE CALCULATING PROFIT:
+     INPUT: TimePeriod (e.g., "Last Month")
+     
+     TotalRevenue = 0
+     TotalCost = 0
+     
+     Orders = GetAllOrders(TimePeriod)
+     
+     FOR EACH Order IN Orders:
+         IF Order.Status is NOT "Cancelled" THEN
+             TotalRevenue = TotalRevenue + Order.TotalAmount
+             
+             FOR EACH Item IN Order:
+                 ItemCost = Item.Product.Cost * Item.Quantity
+                 TotalCost = TotalCost + ItemCost
+             END FOR
+         END IF
+     END FOR
+     
+     GrossProfit = TotalRevenue - TotalCost
+     NetProfit = GrossProfit - OperationalExpenses (like Shipping, Rent)
+     
+     DISPLAY GrossProfit
 
----
+# FEATURES AND TECH STACK
 
-## 📖 Usage Guide
+FEATURES
 
-### 1. Dashboard Overview
-The dashboard is your command center showing:
-- **Revenue metrics** - Total sales and trends
-- **Active orders** - Current order count
-- **Inventory alerts** - Low stock warnings
-- **Quick stats** - Products, customers, warehouses
+Core Functionality
+  Multi-Warehouse Management
+  Order Processing
+  Purchase Order System
+  Real-time Stock Tracking
+  Smart Allocation Engine
+  Customer Management
+  Advanced Reporting
 
-### 2. Managing Inventory
-- Navigate to **Inventory** section
-- Click **"Add Product"** to create new items
-- Set SKU, name, price, cost, and upload images
-- Stock levels update automatically based on orders
-- Status badges show: IN STOCK, LOW STOCK, OUT OF STOCK
+User Experience
+  Interactive 3D Globe
+  Glassmorphic UI
+  Keyboard Shortcuts
+  Real-time Updates
+  Responsive Design
+  Dark Theme
 
-### 3. Managing Customers
-- Go to **Customers** tab
-- Add business clients with contact details
-- Set credit limits for each customer
-- View order history and total spending
-- Track customer lifetime value
+Tech Stack
+  Frontend: React, TypeScript, Vite, Tailwind CSS, Framer Motion
+  Backend: Django, Django REST Framework, SQLite
 
-### 4. Creating Orders
-- Click **"New Order"** from any screen
-- Select customer from dropdown
-- Add products to cart
-- System validates stock availability
-- Order starts as "Pending" status
+# PROJECT STRUCTURE
 
-### 5. Order Fulfillment
-- Update order status: Pending → Processing → Shipped → Delivered
-- Add tracking numbers for shipments
-- Copy tracking info to share with customers
-- Completed orders appear in revenue reports
+B2B2/
+  src/
+    app/ (Frontend Pages)
+    components/ (UI Elements)
+    lib/ (Helpers)
+  backend/
+    orders/
+    inventory/
+    customers/
+    reports/
 
-### 6. Analytics & Reports
-- View **Revenue Trends** over 6 or 12 months
-- Analyze **Category Distribution** with pie charts
-- Check **Top Products** by revenue and sales
-- Monitor **Warehouse Efficiency** metrics
-- Export reports as CSV, Excel, or PDF
+# AUTHOR
 
----
-
-## 🔌 API Documentation
-
-### Authentication
-All API endpoints require JWT authentication (except login/register).
-
-**Login**
-```http
-POST /api/auth/login/
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
-
-### Key Endpoints
-
-**Products**
-- `GET /api/inventory/products/` - List all products
-- `POST /api/inventory/products/` - Create product
-- `GET /api/inventory/products/{id}/` - Get product details
-- `POST /api/inventory/products/{id}/restock/` - Add stock
-
-**Orders**
-- `GET /api/orders/` - List orders
-- `POST /api/orders/` - Create order
-- `GET /api/orders/{id}/` - Get order details
-- `PATCH /api/orders/{id}/` - Update order
-- `PATCH /api/orders/{id}/update_status/` - Change status
-
-**Reports**
-- `GET /api/reports/dashboard/` - Dashboard stats
-- `GET /api/reports/revenue/?months=6` - Revenue report
-- `GET /api/reports/products/` - Product performance
-- `GET /api/reports/category/` - Category distribution
-- `GET /api/reports/warehouses/` - Warehouse efficiency
-
----
-
-## 🎨 Key Concepts
-
-### Warehouse Logic
-```
-A Warehouse has: Name, Location, Capacity
-An InventoryItem links: Product + Warehouse + Quantity
-
-Total Stock for Product A = Sum(Product A in all warehouses)
-```
-
-### Stock Status Calculation
-```python
-if total_stock == 0:
-    status = "OUT OF STOCK"
-elif any warehouse has stock <= threshold:
-    status = "LOW STOCK"
-else:
-    status = "IN STOCK"
-```
-
-### Order Processing
-```
-1. Customer selects products
-2. System checks stock availability
-3. System validates customer credit limit
-4. Order created with status "Pending"
-5. Stock deducted from inventory
-6. Status updates: Processing → Shipped → Delivered
-7. Revenue recorded in reports
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-## 👤 Author
-
-**Maulik Joshi**
-- GitHub: [@MaulikI8](https://github.com/MaulikI8)
-- Email: jmaulik21@gmail.com
-
----
-
-## 🙏 Acknowledgments
-
-Built as a portfolio project demonstrating full-stack development capabilities with modern web technologies.
-
----
-
-**⭐ If you find this project useful, please consider giving it a star!**
+A Portfolio Project demonstrating advanced React and full-stack capabilities.
