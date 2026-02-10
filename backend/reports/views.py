@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, F
 from django.utils import timezone
 from datetime import timedelta
 from orders.models import Order, OrderItem
@@ -72,6 +72,58 @@ def dashboard_stats(request):
             'orders': day_orders.count()
         })
     
+    # Calculate growth metrics
+    # 1. Conversion Rate: orders per customer
+    total_customers = Customer.objects.filter(user=user).count()
+    conversion_rate = (total_orders / total_customers * 100) if total_customers > 0 else 0
+    
+    # 2. Customer Growth: compare this week vs last week
+    today = timezone.now().date()
+    week_ago = today - timedelta(days=7)
+    two_weeks_ago = today - timedelta(days=14)
+    
+    customers_this_week = Customer.objects.filter(
+        user=user,
+        created_at__date__gte=week_ago,
+        created_at__date__lte=today
+    ).count()
+    
+    customers_last_week = Customer.objects.filter(
+        user=user,
+        created_at__date__gte=two_weeks_ago,
+        created_at__date__lt=week_ago
+    ).count()
+    
+    customer_growth = ((customers_this_week - customers_last_week) / customers_last_week * 100) if customers_last_week > 0 else 0
+    
+    # 3. Revenue Growth: compare this week vs last week
+    revenue_this_week = sum(
+        order.total_amount for order in user_orders.filter(
+            created_at__date__gte=week_ago,
+            created_at__date__lte=today
+        )
+    )
+    
+    revenue_last_week = sum(
+        order.total_amount for order in user_orders.filter(
+            created_at__date__gte=two_weeks_ago,
+            created_at__date__lt=week_ago
+        )
+    )
+    
+    revenue_growth = ((revenue_this_week - revenue_last_week) / revenue_last_week * 100) if revenue_last_week > 0 else 0
+    
+    # 4. Average Response Time: time from order creation to first status change
+    # Calculate average time between order creation and first update
+    avg_response_seconds = 0
+    orders_with_updates = user_orders.filter(updated_at__gt=timezone.F('created_at'))[:100]
+    if orders_with_updates.exists():
+        total_seconds = sum(
+            (order.updated_at - order.created_at).total_seconds() 
+            for order in orders_with_updates
+        )
+        avg_response_seconds = int(total_seconds / orders_with_updates.count())
+    
     return Response({
         'total_revenue': float(total_revenue),
         'total_orders': total_orders,
@@ -80,6 +132,12 @@ def dashboard_stats(request):
         'recent_orders': recent_orders_data,
         'top_products': top_products,
         'weekly_data': weekly_data,
+        # Growth metrics
+        'conversion_rate': round(conversion_rate, 1),
+        'customer_growth': round(customer_growth, 1),
+        'revenue_growth': round(revenue_growth, 1),
+        'avg_response_time': avg_response_seconds,
+        'total_customers': total_customers,
     })
 
 

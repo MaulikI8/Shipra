@@ -752,48 +752,28 @@ function Overview({ onExport, onCreateOrder, onAddProduct, dashboardData, isLoad
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {(() => {
-            // Calculate conversion rate: orders / customers (if customers > 0)
-            const conversionRate = customers.length > 0 
-              ? ((totalOrders / customers.length) * 100).toFixed(1) 
-              : '0.0'
-            
-            // Calculate customer growth: compare current vs last week (simulate 5-15% growth if data exists)
-            const customerGrowth = customers.length > 0 
-              ? (Math.min(15, Math.max(5, (customers.length * 0.12)))).toFixed(1)
-              : '0.0'
-            
-            // Calculate revenue growth from weekly data
-            const weeklyData = dashboardData?.weekly_data || []
-            let revenueGrowth = '0.0'
-            if (weeklyData.length >= 2) {
-              const lastWeek = weeklyData.slice(-2, -1)[0]?.value || 0
-              const thisWeek = weeklyData.slice(-1)[0]?.value || 0
-              if (lastWeek > 0) {
-                revenueGrowth = (((thisWeek - lastWeek) / lastWeek) * 100).toFixed(1)
-              }
-            }
-            
-            // Calculate avg response time based on recent orders (simulate 2-5 seconds)
-            const avgResponse = recentOrders.length > 0 
-              ? Math.floor(2 + Math.random() * 3)
-              : 0
+            // Use backend-calculated metrics
+            const conversionRate = dashboardData?.conversion_rate || 0
+            const customerGrowth = dashboardData?.customer_growth || 0
+            const revenueGrowth = dashboardData?.revenue_growth || 0
+            const avgResponse = dashboardData?.avg_response_time || 0
 
             return [
               { 
                 label: 'Conversion Rate', 
-                val: conversionRate + '%', 
+                val: conversionRate.toFixed(1) + '%', 
                 icon: Target, 
                 color: 'text-accent', 
                 bg: 'bg-accent/20', 
-                change: '+' + (parseFloat(conversionRate) * 0.1).toFixed(1) + '%' 
+                change: '+' + (conversionRate * 0.1).toFixed(1) + '%' 
               },
               { 
                 label: 'Customer Growth', 
-                val: customers.length.toString(), 
+                val: (dashboardData?.total_customers || customers.length).toString(), 
                 icon: Users, 
                 color: 'text-emerald-400', 
                 bg: 'bg-emerald-400/20', 
-                change: '+' + customerGrowth + '%' 
+                change: (customerGrowth >= 0 ? '+' : '') + customerGrowth.toFixed(1) + '%' 
               },
               { 
                 label: 'Revenue Growth', 
@@ -801,7 +781,7 @@ function Overview({ onExport, onCreateOrder, onAddProduct, dashboardData, isLoad
                 icon: DollarSign, 
                 color: 'text-accent', 
                 bg: 'bg-accent/20', 
-                change: (parseFloat(revenueGrowth) >= 0 ? '+' : '') + revenueGrowth + '%' 
+                change: (revenueGrowth >= 0 ? '+' : '') + revenueGrowth.toFixed(1) + '%' 
               },
               { 
                 label: 'Avg Response', 
