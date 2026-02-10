@@ -42,8 +42,18 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+
+  // Load saved email on mount
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail')
+    if (savedEmail) {
+      setEmail(savedEmail)
+      setRememberMe(true)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -61,6 +71,13 @@ export default function LoginPage() {
       const { response, data } = await api.login(email, password)
       
       if (response.ok) {
+        // Save email if Remember Me is checked
+        if (rememberMe) {
+          localStorage.setItem('rememberedEmail', email)
+        } else {
+          localStorage.removeItem('rememberedEmail')
+        }
+        
         toast('Login successful!', 'success')
         setTimeout(() => navigate('/dashboard'), 1000)
       } else {
@@ -231,6 +248,8 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded bg-white/5 border border-white/20 text-accent focus:ring-2 focus:ring-accent/50 cursor-pointer"
                 />
                 <span className="text-white/60 group-hover:text-white/80 transition-colors">Remember me</span>
